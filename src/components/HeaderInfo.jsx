@@ -2,6 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown } from 'react-bootstrap';
 import { useHistory } from 'react-router';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import cart from '../assets/images/icon/cart.png';
+import heart from '../assets/images/icon/heart.png';
+
+
+import { useSelector } from 'react-redux';
 
 HeaderUserInfo.propTypes = {
     token: PropTypes.string,
@@ -10,6 +17,7 @@ HeaderUserInfo.propTypes = {
 
 function HeaderUserInfo(props) {
     const { token, onLogout } = props
+    const cartLength = useSelector((state) => state.cartItems.value.length)
 
     const history = useHistory()
 
@@ -33,7 +41,17 @@ function HeaderUserInfo(props) {
                         </Dropdown.Item>
                     </>
                     :
-                    <Dropdown.Item href="/login">Đăng nhập</Dropdown.Item>
+                    <>
+                        <Dropdown.Item href="/cart">
+                            <img src={cart} alt="" /> Giỏ hàng ({cartLength})
+                        </Dropdown.Item>
+                        <Dropdown.Item href="/cart">
+                            <img src={heart} alt="" /> Yêu thích
+                        </Dropdown.Item>
+                        <Dropdown.Item href="/login">
+                            <FontAwesomeIcon className="userCircle" icon={faCircleUser} /> Đăng nhập
+                        </Dropdown.Item>
+                    </>
             }
         </Dropdown.Menu>
 

@@ -7,6 +7,27 @@
     z-index: 99;
     height: $header-height;
     transition: height 0.3s ease;
+    border-bottom:  1px solid #d2d2d7;
+
+    .header__top{
+        padding: 10px 0;
+        font-size: 14px;
+    
+        background-color: #f5f5f5;
+    
+        &__left{
+           text-align: right;
+           color: #111111;
+        }
+        &__mid{
+           text-align: center;
+           color: #111111;
+        }
+        &__right{
+           text-align: left;
+           color: #111111;
+        }
+    }
 
     @include tablet {
         height: $header-tablet-height;
@@ -25,6 +46,7 @@
         height: $header-shrink-height;
         box-shadow: $box-shadow;
         z-index: 100;
+        
 
         @include mobile {
             height: $header-mobile-height;
@@ -32,10 +54,8 @@
     }
 
     &__logo {
-        @include flex(center, center);
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
+        @include flex(center,center);
+        pointer-events: all;
 
         img {
             height: 28px;
@@ -44,7 +64,7 @@
 
     &__menu {
         @include flex(center, space-between);
-        height: 100%;
+        height: 60%;
         font-size: 1.5rem;
 
         &__item ~ &__item {
@@ -90,13 +110,15 @@
                     }
                 }
                 span {
-                    color: black;
-                    font-size: 15px;
-                    font-weight: 20px;
-                    border: 1px solid red;
-                    border-radius: 50%;
-                    padding: 2px 4px;
-                    background-color: red;
+                    color: #0d0d0d;
+                    font-size: 12px;
+                    font-weight: 400;
+                    position: absolute;
+                    left: 19px;
+                    top: 20px;
+                    background-color: #d1d1d1;
+                    padding: 1px 7px 0px 7px;
+                    border-radius: 8px;
                 }
             }
 
@@ -152,12 +174,24 @@
     }
 }
 
+.buttomCart{
+    border: 0px solid;
+    margin: 0px 0px 8px -25px;
+}
+
 .cartLength {
-    color: black;
-                    font-size: 15px;
-                    font-weight: 20px;
-                    border: 1px solid red;
-                    border-radius: 50%;
-                    padding: 2px 4px;
-                    background-color: red;
+    color: #0d0d0d;
+    font-size: 12px;
+    font-weight: 400;
+    position: absolute;
+    left: 19px;
+    top: 20px;
+    background-color: #d1d1d1;
+    padding: 1px 7px 0px 7px;
+    border-radius: 8px;
+}
+
+.buttomOpiton{
+ background-color: transparent !important;
+ border: 0px;
 }

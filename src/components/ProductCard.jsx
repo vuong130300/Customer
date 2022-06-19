@@ -20,10 +20,10 @@ const ProductCard = props => {
         <div className="product-card">
             <Link to={`/product/${item._id}`}>
                 <div className="product-card__image">
-                    <img src={`${process.env.REACT_APP_IMAGEURL}${item.product.productImage}`} alt="" />
-                    <img src={`${process.env.REACT_APP_IMAGEURL}${item.product.productImage}`} alt="" />
+                    <img src={`${process.env.REACT_APP_IMAGEURL}${item.product.image}`} alt="" />
+                    {/* <img src={`${process.env.REACT_APP_IMAGEURL}${item.product.productImage}`} alt="" /> */}
                 </div>
-                <h3 className="product-card__name">{item.product.productName}</h3>
+                <h3 className="product-card__name">{item.product.name}</h3>
                 <div className="product-card__price">
                     {numberWithCommas(item.soldPrice)}
                     <span className="product-card__price__old">

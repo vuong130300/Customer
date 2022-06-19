@@ -11,12 +11,6 @@ const brandAPI = {
       brand,
       {headers: { 'content-type': `multipart/form-data; boundary=${brand._boundary}` }}
     ),
-  create: (brand) => 
-    axi.post(`/brand`, 
-      brand,
-      {headers: { 'content-type': `multipart/form-data; boundary=${brand._boundary}` }}
-  ),
-  delete: (id) => axi.delete(`/brand/${id}`)
 }
 
 const categoryAPI = {

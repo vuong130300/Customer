@@ -1,57 +1,122 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react'
 
+import {brandAPI, categoryAPI, wareHouseAPI} from '../api/api';
 import Helmet from '../components/Helmet'
 import CheckBox from '../components/CheckBox'
 
-import productData from '../assets/fake-data/products'
-import category from '../assets/fake-data/category'
-import colors from '../assets/fake-data/product-color'
-import size from '../assets/fake-data/product-size'
 import Button from '../components/Button'
 import InfinityList from '../components/InfinityList'
 
 const Catalog = () => {
 
     const initFilter = {
-        category: [],
-        color: [],
-        size: []
+        categories: [],
+        brands: []
     }
 
-    const productList = productData.getAllProducts()
+    useEffect(() => {
+        async function getProducts() {
+            try {
+                const response = await wareHouseAPI.getAll();
+                if(response.status === 200) {
+                    const products = response.data
+                    console.log(products)
+                    setProducts(products)
+                } else {
+                    console.log(response)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getProducts()
+    },[])
 
-    const [products, setProducts] = useState(productList)
+    const [products, setProducts] = useState([])
+
+    const [productFilter, setProductFilter]= useState([])
 
     const [filter, setFilter] = useState(initFilter)
+
+    const [categories, setCategories] = useState([])
+
+    const [brands, setBrands] = useState([])
+
+    useEffect(() => {
+        async function getCategories() {
+            try {
+                const response = await categoryAPI.getAll();
+                if(response.status === 200) {
+                    const categories = response.data
+                    console.log(categories)
+                    setCategories(categories)
+                } else {
+                    console.log(response)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getCategories()
+    },[])
+
+
+     useEffect(() => {
+        async function getProducts() {
+            try {
+                const response = await wareHouseAPI.getAll();
+                if(response.status === 200) {
+                    const products = response.data
+                    console.log(products)
+                    setProducts(products)
+                } else {
+                    console.log(response)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getProducts()
+    },[])
+
+    useEffect(() => {
+        async function getBrands() {
+            try {
+                const response = await brandAPI.getAll();
+                if(response.status === 200) {
+                    const brands = response.data
+                    setBrands(brands)
+                } else {
+                    console.log(response)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getBrands()
+    },[])
 
     const filterSelect = (type, checked, item) => {
         if (checked) {
             switch(type) {
                 case "CATEGORY":
-                    setFilter({...filter, category: [...filter.category, item.categorySlug]})
+                    setFilter({...filter, categories: [...filter.categories, item._id]})
                     break
-                case "COLOR":
-                    setFilter({...filter, color: [...filter.color, item.color]})
-                    break
-                case "SIZE":
-                    setFilter({...filter, size: [...filter.size, item.size]})
-                    break
+                    case "BRAND":
+                        setFilter({...filter, brands: [...filter.brands, item._id]})
+                        break
                 default:
             }
         } else {
             switch(type) {
                 case "CATEGORY":
-                    const newCategory = filter.category.filter(e => e !== item.categorySlug)
-                    setFilter({...filter, category: newCategory})
+                    const newCategory = filter.categories.filter(e => e !== item._id)
+                    setFilter({...filter, categories: newCategory})
                     break
-                case "COLOR":
-                    const newColor = filter.color.filter(e => e !== item.color)
-                    setFilter({...filter, color: newColor})
-                    break
-                case "SIZE":
-                    const newSize = filter.size.filter(e => e !== item.size)
-                    setFilter({...filter, size: newSize})
-                    break
+                    case "BRAND":
+                        const newBrand = filter.brands.filter(e => e !== item._id)
+                        setFilter({...filter, brands: newBrand})
+                        break
                 default:
             }
         }
@@ -59,36 +124,21 @@ const Catalog = () => {
 
     const clearFilter = () => setFilter(initFilter)
 
-    const updateProducts = useCallback(
+    useEffect(
         () => {
-            let temp = productList
+            let temp = [...products]
 
-            if (filter.category.length > 0) {
-                temp = temp.filter(e => filter.category.includes(e.categorySlug))
+            if (filter.categories.length > 0) {
+                temp = temp.filter(e => filter.categories.includes(e.product.categoryId))
             }
 
-            if (filter.color.length > 0) {
-                temp = temp.filter(e => {
-                    const check = e.colors.find(color => filter.color.includes(color))
-                    return check !== undefined
-                })
+            if (filter.brands.length > 0) {
+                temp = temp.filter(e => filter.brands.includes(e.product.brandId))
             }
-
-            if (filter.size.length > 0) {
-                temp = temp.filter(e => {
-                    const check = e.size.find(size => filter.size.includes(size))
-                    return check !== undefined
-                })
-            }
-
-            setProducts(temp)
+            setProductFilter(temp)
         },
-        [filter, productList],
+        [filter]
     )
-
-    useEffect(() => {
-        updateProducts()
-    }, [updateProducts])
 
     const filterRef = useRef(null)
 
@@ -107,12 +157,12 @@ const Catalog = () => {
                         </div>
                         <div className="catalog__filter__widget__content">
                             {
-                                category.map((item, index) => (
-                                    <div key={index} className="catalog__filter__widget__content__item">
+                                categories.map((item) => (
+                                    <div key={item._id} className="catalog__filter__widget__content__item">
                                         <CheckBox
-                                            label={item.display}
+                                            label={item.name}
                                             onChange={(input) => filterSelect("CATEGORY", input.checked, item)}
-                                            checked={filter.category.includes(item.categorySlug)}
+                                            checked={filter.categories.includes(item._id)}
                                         />
                                     </div>
                                 ))
@@ -122,35 +172,16 @@ const Catalog = () => {
 
                     <div className="catalog__filter__widget">
                         <div className="catalog__filter__widget__title">
-                            màu sắc
+                            Hãng
                         </div>
                         <div className="catalog__filter__widget__content">
                             {
-                                colors.map((item, index) => (
-                                    <div key={index} className="catalog__filter__widget__content__item">
+                                brands.map((item) => (
+                                    <div key={item._id} className="catalog__filter__widget__content__item">
                                         <CheckBox
-                                            label={item.display}
-                                            onChange={(input) => filterSelect("COLOR", input.checked, item)}
-                                            checked={filter.color.includes(item.color)}
-                                        />
-                                    </div>
-                                ))
-                            }
-                        </div>
-                    </div>
-
-                    <div className="catalog__filter__widget">
-                        <div className="catalog__filter__widget__title">
-                            kích cỡ
-                        </div>
-                        <div className="catalog__filter__widget__content">
-                            {
-                                size.map((item, index) => (
-                                    <div key={index} className="catalog__filter__widget__content__item">
-                                        <CheckBox
-                                            label={item.display}
-                                            onChange={(input) => filterSelect("SIZE", input.checked, item)}
-                                            checked={filter.size.includes(item.size)}
+                                            label={item.name}
+                                            onChange={(input) => filterSelect("BRAND", input.checked, item)}
+                                            checked={filter.brands.includes(item._id)}
                                         />
                                     </div>
                                 ))
@@ -169,7 +200,7 @@ const Catalog = () => {
                 </div>
                 <div className="catalog__content">
                     <InfinityList
-                        data={products}
+                        products={productFilter}
                     />
                 </div>
             </div>

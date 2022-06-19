@@ -32,7 +32,7 @@ const ProductView = props => {
     }
 
     useEffect(() => {
-        setPreviewImg(product ? product.product.productImage: '' )
+        setPreviewImg(product ? product.product.image: '' )
         setQuantity(1)
     }, [product])
 
@@ -54,22 +54,23 @@ const ProductView = props => {
         product ? 
         <div className="product">
             <div className="product__images">
-                <div className="product__images__list">
-                    <div className="product__images__list__item" onClick={() => setPreviewImg(product.product.productImage)}>
-                        <img src={`${process.env.REACT_APP_IMAGEURL}${product.product.productImage}`} alt="" />
-                    </div>
-                    <div className="product__images__list__item" onClick={() => setPreviewImg(product.product.productImage)}>
-                        <img src={`${process.env.REACT_APP_IMAGEURL}${product.product.productImage}`} alt="" />
-                    </div>
-                </div>
                 <div className="product__images__main">
                     <img src={`${process.env.REACT_APP_IMAGEURL}${previewImg}`} alt="" />
                 </div>
+                <div className="product__images__list">
+                    <div className="product__images__list__item" onClick={() => setPreviewImg(product.product.image)}>
+                        <img src={`${process.env.REACT_APP_IMAGEURL}${product.product.image}`} alt="" />
+                    </div>
+                    <div className="product__images__list__item" onClick={() => setPreviewImg(product.product.image)}>
+                        <img src={`${process.env.REACT_APP_IMAGEURL}${product.product.image}`} alt="" />
+                    </div>
+                </div>
+                
                 <div className={`product-description ${descriptionExpand ? 'expand' : ''}`}>
                     <div className="product-description__title">
                         Chi tiết sản phẩm
                     </div>
-                    <div className="product-description__content" dangerouslySetInnerHTML={{__html: product.product.productName}}></div>
+                    <div className="product-description__content" dangerouslySetInnerHTML={{__html: product.product.name}}></div>
                     <div className="product-description__toggle">
                         <Button size="sm" onClick={() => setDescriptionExpand(!descriptionExpand)}>
                             {
@@ -80,7 +81,7 @@ const ProductView = props => {
                 </div>
             </div>
             <div className="product__info">
-                <h1 className="product__info__title">{product.product.productName}</h1>
+                <h1 className="product__info__title">{product.product.name}</h1>
                 <div className="product__info__item">
                     <span className="product__info__item__price">
                         {numberWithCommas(product.soldPrice )}

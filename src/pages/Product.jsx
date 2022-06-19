@@ -18,7 +18,7 @@ const Product = props => {
 
     useEffect(() => {
         async function getProduct() {
-            console.log('dasd')
+            
             try {
                 const response = await wareHouseAPI.getById(id);
                 if(response.status === 200) {

@@ -72,6 +72,7 @@ HeroSlider.propTypes = {
 }
 
 const HeroSliderItem = props => (
+   
     <div className={`hero-slider__item ${props.active ? 'active' : ''}`}>
         <div className="hero-slider__item__info">
             <div className={`hero-slider__item__info__title color-${props.item.color}`}>

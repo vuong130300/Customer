@@ -35,12 +35,12 @@ const CartItem = props => {
         item ? 
         <div className="cart__item" >
             <div className="cart__item__image">
-                <img src={`${process.env.REACT_APP_IMAGEURL}${item.product.productImage}`} alt="" />
+                <img src={`${process.env.REACT_APP_IMAGEURL}${item.product.image}`} alt="" />
             </div>
             <div className="cart__item__info">
                 <div className="cart__item__info__name">
                     <Link to={`/product/${item._id}`}>
-                        {`${item.product.productName} - ${item.quantity} ${item.product.unit}`}
+                        {`${item.product.name} - ${item.quantity} ${item.product.unit}`}
                     </Link>
                 </div>
                 <div className="cart__item__info__price">

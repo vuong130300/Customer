@@ -4,6 +4,7 @@ import {wareHouseAPI} from '../api/api';
 
 import Helmet from '../components/Helmet'
 import HeroSlider from '../components/HeroSlider'
+import Carousel from '../components/Carousel'
 import Section, { SectionTitle, SectionBody } from '../components/Section'
 import PolicyCard from '../components/PolicyCard'
 import Grid from '../components/Grid'
@@ -37,6 +38,7 @@ const Home = () => {
     return (
         <Helmet title="Trang chủ">
             {/* hero slider */}
+            {/* <Carousel /> */}
             <HeroSlider
                 data={heroSliderData}
                 control={true}

@@ -17,7 +17,8 @@ function Login() {
         const { email, password } = formValues
 
         async function getToken() {
-            try {
+            try {                
+                console.log(email,password)
                 const response = await customerAPI.login({email,password})
                 if (response.status === 200) {
                     dispatch(addToken(response.data.accessToken))

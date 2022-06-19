@@ -1,18 +1,21 @@
 import React, { useRef, useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
-import { Dropdown } from 'react-bootstrap'
+import { Col, Dropdown, Row } from 'react-bootstrap'
+import { faLocationDot, faPhone, faMotorcycle } from '@fortawesome/free-solid-svg-icons';
+
 
 import logo from '../assets/images/Logo-2.png'
 import { useDispatch } from 'react-redux'
 import HeaderUserInfo from './HeaderInfo'
 import { removeToken } from '../redux/token/tokenSlice'
 
+import search from '../assets/images/icon/search.png';
+import cart from '../assets/images/icon/cart.png';
+import heart from '../assets/images/icon/heart.png';
+
 const mainNav = [
-    {
-        display: "Trang chủ",
-        path: "/"
-    },
     {
         display: "Sản phẩm",
         path: "/catalog"
@@ -73,15 +76,25 @@ const Header = () => {
 
     return (
         <div className="header" ref={headerRef}>
-            <div className="container">
-                <div className="header__logo">
-                    <Link to="/">
-                        <img src={logo} alt="" />
-                    </Link>
+             <div className="header__top">
+                <div className="container">
+                    <Row >
+                        <Col lg="4" xs="4" className="header__top__left"><FontAwesomeIcon icon={faLocationDot} /> 60 Cửa hàng khắp cả nước</Col>
+                        <Col lg="4" xs="4" className="header__top__mid"><FontAwesomeIcon icon={faPhone} /> Đặt hàng: 0919889558</Col>
+                        <Col lg="4" xs="4" className="header__top__right"><FontAwesomeIcon icon={faMotorcycle} /> Freeship từ 50.000vnd</Col>
+                    </Row>
                 </div>
+            </div>
+            <div className="container">
+                    
                 <div className="header__menu">
                     <div className="header__menu__mobile-toggle" onClick={menuToggle}>
                         <i className='bx bx-menu-alt-left'></i>
+                    </div>
+                    <div className="header__logo">
+                        <Link to="/">
+                            <img src={logo} alt="" />
+                        </Link>
                     </div>
                     <div className="header__menu__left" ref={menuLeft}>
                         <div className="header__menu__left__close" onClick={menuToggle}>
@@ -103,19 +116,15 @@ const Header = () => {
                     </div>
                     <div className="header__menu__right">
                         <div className="header__menu__item header__menu__right__item">
-                            <i className="bx bx-search"></i>
+                            <img src={search} alt="" />
                         </div>
                         <div className="header__menu__item header__menu__right__item">
-                            <Link to="/cart">
-                                <i className="bx bx-shopping-bag"></i>
+                            <Dropdown className="buttomCart">
+                                <Dropdown.Toggle className="buttomOpiton"  id="dropdown-custom-components">
+                                <img src={cart} alt="" />
                                 <span className="cartLength">{cartLength}</span>
-                            </Link>
-                        </div>
-                        <div className="header__menu__item header__menu__right__item">
-                            <Dropdown>
-                                <Dropdown.Toggle as={iconUser} id="dropdown-custom-components">
                                 </Dropdown.Toggle>
-                                <HeaderUserInfo token={token} onLogout={onLogout} />
+                               <HeaderUserInfo token={token} onLogout={onLogout} />
                             </Dropdown>
                         </div>
                     </div>
