@@ -36,6 +36,7 @@ function HeaderUserInfo(props) {
                     <>
                         <Dropdown.Item href="/user-info">Xem thông tin</Dropdown.Item>
                         <Dropdown.Item href="/order">Xem đơn hàng</Dropdown.Item>
+                        <Dropdown.Item href="/cart">Xem giỏ hàng</Dropdown.Item>
                         <Dropdown.Item onClick={handleLogout}>
                             đăng xuất
                         </Dropdown.Item>

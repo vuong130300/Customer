@@ -56,4 +56,11 @@ const supplierAPI = {
       phone:supplier.phone})
   }
 }
-export {brandAPI, categoryAPI, customerAPI, employeeAPI, wareHouseAPI, supplierAPI};
+
+const exportOrderAPI = {
+  getAll: () => axi.get('/exportOrder'),
+  create: (inputExportOrder) => {
+    return axi.post(`/exportOrder`,inputExportOrder)
+  }
+}
+export {brandAPI, categoryAPI, customerAPI, employeeAPI, wareHouseAPI, supplierAPI, exportOrderAPI};

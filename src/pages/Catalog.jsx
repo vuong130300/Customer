@@ -14,24 +14,6 @@ const Catalog = () => {
         brands: []
     }
 
-    useEffect(() => {
-        async function getProducts() {
-            try {
-                const response = await wareHouseAPI.getAll();
-                if(response.status === 200) {
-                    const products = response.data
-                    console.log(products)
-                    setProducts(products)
-                } else {
-                    console.log(response)
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getProducts()
-    },[])
-
     const [products, setProducts] = useState([])
 
     const [productFilter, setProductFilter]= useState([])
@@ -48,7 +30,6 @@ const Catalog = () => {
                 const response = await categoryAPI.getAll();
                 if(response.status === 200) {
                     const categories = response.data
-                    console.log(categories)
                     setCategories(categories)
                 } else {
                     console.log(response)
@@ -67,7 +48,6 @@ const Catalog = () => {
                 const response = await wareHouseAPI.getAll();
                 if(response.status === 200) {
                     const products = response.data
-                    console.log(products)
                     setProducts(products)
                 } else {
                     console.log(response)
@@ -129,11 +109,11 @@ const Catalog = () => {
             let temp = [...products]
 
             if (filter.categories.length > 0) {
-                temp = temp.filter(e => filter.categories.includes(e.product.categoryId))
+                temp = temp.filter(e => filter.categories.includes(e.product.category))
             }
 
             if (filter.brands.length > 0) {
-                temp = temp.filter(e => filter.brands.includes(e.product.brandId))
+                temp = temp.filter(e => filter.brands.includes(e.product.brand))
             }
             setProductFilter(temp)
         },
