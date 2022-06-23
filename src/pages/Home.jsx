@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import {wareHouseAPI} from '../api/api';
+import {wareHouseAPI, categoryAPI} from '../api/api';
 
 import Helmet from '../components/Helmet'
 import HeroSlider from '../components/HeroSlider'
@@ -17,6 +17,7 @@ import banner from '../assets/images/banner.png'
 
 const Home = () => {
     const [products, setProducts] = useState([])
+    const [categories, setCategories] = useState([])
 
     useEffect(() => {
         async function getProducts() {
@@ -34,6 +35,23 @@ const Home = () => {
         }
         getProducts()
     },[])
+
+    // useEffect(() => {
+    //     async function getCategories() {
+    //         try {
+    //             const response = await productAPI.getAll();
+    //             if(response.status === 200) {
+    //                 const products = response.data
+    //                 setProducts(products)
+    //             } else {
+    //                 console.log(response)
+    //             }
+    //         } catch (error) {
+    //             console.log(error)
+    //         }
+    //     }
+    //     getCategories()
+    // },[])
 
     return (
         <Helmet title="Trang chủ">
@@ -69,12 +87,18 @@ const Home = () => {
                 </SectionBody>
             </Section>
             {/* end policy section */}
+            <Section>
+                <SectionTitle>
+                    Danh mục sản phẩm
+                </SectionTitle>
 
+            </Section>
             {/* best selling section */}
             <Section>
                 <SectionTitle>
                     top sản phẩm bán chạy trong tuần
                 </SectionTitle>
+                
                 <SectionBody>
                     <Grid
                         col={4}

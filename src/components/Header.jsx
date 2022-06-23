@@ -2,9 +2,9 @@ import React, { useRef, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
-import { Col, Dropdown, Row, Form, FormControl, Button } from 'react-bootstrap'
+import { useHistory } from 'react-router';
+import { Col, Dropdown, Row } from 'react-bootstrap'
 import { faLocationDot, faPhone, faMotorcycle } from '@fortawesome/free-solid-svg-icons';
-
 
 import logo from '../assets/images/Logo-2.png'
 import { useDispatch } from 'react-redux'
@@ -16,6 +16,7 @@ import search from '../assets/images/icon/search.png';
 import cart from '../assets/images/icon/cart.png';
 import heart from '../assets/images/icon/heart.png';
 import { propTypes } from 'react-bootstrap/esm/Image';
+import { wareHouseAPI } from '../api/api';
 
 const mainNav = [
     {
@@ -35,30 +36,57 @@ const mainNav = [
 const Header = (props) => {
     const [showSearchForm, setShowSearchForm] = useState(false);
     const cartLength = useSelector((state) => state.cartItems.value.length)
-    const token = useSelector(state => state.token.value)
-
     const { pathname } = useLocation()
     const activeNav = mainNav.findIndex(e => e.path === pathname)
-
     const headerRef = useRef(null)
-
     const dispatch = useDispatch()
+    const history = useHistory()
 
     function handleSearchFormShow() {
-        console.log('aa')
-        setShowSearchForm(true)
+        setShowSearchForm(!showSearchForm)
+       
     };
 
-    function handleSearchFormClose() {
-        setShowSearchForm(false)
+    async function handleSearch(searchTerm) {
+        try {
+            const response = await wareHouseAPI.search(searchTerm);
+            if(response.status === 200) {
+                const searchedProducts = response.data
+                console.log(searchedProducts)
+                history.push('/catalog',{searchedProducts})
+                
+            } else {
+                console.log(response)
+            }
+        } catch (error) {
+            console.log(error)
+        }
     };
 
     
 
-    const onLogout = () => {
-        dispatch(removeToken())
-    }
+    
 
+    function handleLogout (){
+        dispatch(removeToken())
+        history.push('/')
+    }
+    
+    useEffect(() => {
+        window.addEventListener("scroll", () => {
+            try {
+                if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+                    headerRef.current.classList.add('shrink')
+                } else {
+                    headerRef.current.classList.remove('shrink')
+                }
+            } catch(err){}
+        })
+        return () => {
+            window.removeEventListener("scroll",window)
+        };
+    }, []);
+    
     const menuLeft = useRef(null)
 
     const menuToggle = () => menuLeft.current.classList.toggle('active')
@@ -133,7 +161,7 @@ const Header = (props) => {
                                 }
                                 
                                 </Dropdown.Toggle>
-                               <HeaderUserInfo token={token} onLogout={onLogout} />
+                               <HeaderUserInfo  onLogout={handleLogout} />
                             </Dropdown>
                         </div>
                     </div>
@@ -141,9 +169,10 @@ const Header = (props) => {
             </div>
         </div>
         <Search
-                isShow={showSearchForm}
-                onCloseSearchform={handleSearchFormClose}
-            />
+            showSearchForm={showSearchForm}
+            onSearchFormShow={handleSearchFormShow}
+            onSearch={handleSearch}
+        />
         </>
     )
 }

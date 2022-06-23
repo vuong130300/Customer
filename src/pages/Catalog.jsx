@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import {brandAPI, categoryAPI, wareHouseAPI} from '../api/api';
 import Helmet from '../components/Helmet'
@@ -6,35 +6,26 @@ import CheckBox from '../components/CheckBox'
 
 import Button from '../components/Button'
 import InfinityList from '../components/InfinityList'
+import { useLocation } from "react-router-dom";
+
 
 const Catalog = () => {
+    const location = useLocation()
 
     const initFilter = {
         categories: [],
         brands: []
     }
 
-    useEffect(() => {
-        async function getProducts() {
-            try {
-                const response = await wareHouseAPI.getAll();
-                if(response.status === 200) {
-                    const products = response.data
-                    console.log(products)
-                    setProducts(products)
-                } else {
-                    console.log(response)
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getProducts()
-    },[])
+    const [products, setProducts] = useState(() => {
+        const searchedProducts = location.state.searchedProducts
+        return searchedProducts ? searchedProducts : []
+    })
 
-    const [products, setProducts] = useState([])
-
-    const [productFilter, setProductFilter]= useState([])
+    const [productFilter, setProductFilter]= useState(() => {
+        const searchedProducts = location.state.searchedProducts
+        return searchedProducts ? searchedProducts : []
+    })
 
     const [filter, setFilter] = useState(initFilter)
 
@@ -42,13 +33,14 @@ const Catalog = () => {
 
     const [brands, setBrands] = useState([])
 
+    
+
     useEffect(() => {
         async function getCategories() {
             try {
                 const response = await categoryAPI.getAll();
                 if(response.status === 200) {
                     const categories = response.data
-                    console.log(categories)
                     setCategories(categories)
                 } else {
                     console.log(response)
@@ -67,8 +59,8 @@ const Catalog = () => {
                 const response = await wareHouseAPI.getAll();
                 if(response.status === 200) {
                     const products = response.data
-                    console.log(products)
                     setProducts(products)
+                    setProductFilter(products)
                 } else {
                     console.log(response)
                 }
@@ -76,8 +68,13 @@ const Catalog = () => {
                 console.log(error)
             }
         }
-        getProducts()
-    },[])
+        if(products.length === 0)
+            getProducts()
+        if(location.state.searchedProducts){
+            setProducts(location.state.searchedProducts)
+            setProductFilter(location.state.searchedProducts)
+        }
+    },[location.state.searchedProducts])
 
     useEffect(() => {
         async function getBrands() {
@@ -129,11 +126,11 @@ const Catalog = () => {
             let temp = [...products]
 
             if (filter.categories.length > 0) {
-                temp = temp.filter(e => filter.categories.includes(e.product.categoryId))
+                temp = temp.filter(e => filter.categories.includes(e.product.category))
             }
 
             if (filter.brands.length > 0) {
-                temp = temp.filter(e => filter.brands.includes(e.product.brandId))
+                temp = temp.filter(e => filter.brands.includes(e.product.brand))
             }
             setProductFilter(temp)
         },
