@@ -49,6 +49,7 @@ const Catalog = () => {
                 if(response.status === 200) {
                     const products = response.data
                     setProducts(products)
+                    setProductFilter(products)
                 } else {
                     console.log(response)
                 }

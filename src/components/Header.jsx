@@ -2,9 +2,9 @@ import React, { useRef, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router';
 import { Col, Dropdown, Row } from 'react-bootstrap'
 import { faLocationDot, faPhone, faMotorcycle } from '@fortawesome/free-solid-svg-icons';
-
 
 import logo from '../assets/images/Logo-2.png'
 import { useDispatch } from 'react-redux'
@@ -13,7 +13,6 @@ import { removeToken } from '../redux/token/tokenSlice'
 
 import search from '../assets/images/icon/search.png';
 import cart from '../assets/images/icon/cart.png';
-import heart from '../assets/images/icon/heart.png';
 
 const mainNav = [
     {
@@ -32,32 +31,32 @@ const mainNav = [
 
 const Header = () => {
     const cartLength = useSelector((state) => state.cartItems.value.length)
-    const token = useSelector(state => state.token.value)
-
     const { pathname } = useLocation()
     const activeNav = mainNav.findIndex(e => e.path === pathname)
-
     const headerRef = useRef(null)
-
     const dispatch = useDispatch()
+    const history = useHistory()
 
+    function handleLogout (){
+        dispatch(removeToken())
+        history.push('/')
+    }
+    
     useEffect(() => {
         window.addEventListener("scroll", () => {
-            if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
-                headerRef.current.classList.add('shrink')
-            } else {
-                headerRef.current.classList.remove('shrink')
-            }
+            try {
+                if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+                    headerRef.current.classList.add('shrink')
+                } else {
+                    headerRef.current.classList.remove('shrink')
+                }
+            } catch(err){}
         })
         return () => {
-            window.removeEventListener("scroll")
+            window.removeEventListener("scroll",window)
         };
     }, []);
-
-    const onLogout = () => {
-        dispatch(removeToken())
-    }
-
+    
     const menuLeft = useRef(null)
 
     const menuToggle = () => menuLeft.current.classList.toggle('active')
@@ -122,9 +121,13 @@ const Header = () => {
                             <Dropdown className="buttomCart">
                                 <Dropdown.Toggle className="buttomOpiton"  id="dropdown-custom-components">
                                 <img src={cart} alt="" />
-                                <span className="cartLength">{cartLength}</span>
+                                {
+                                    cartLength !== 0 ?
+                                    <span className="cartLength">{cartLength}</span>
+                                    : <></>
+                                }
                                 </Dropdown.Toggle>
-                               <HeaderUserInfo token={token} onLogout={onLogout} />
+                               <HeaderUserInfo  onLogout={handleLogout} />
                             </Dropdown>
                         </div>
                     </div>

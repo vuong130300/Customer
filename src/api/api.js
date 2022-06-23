@@ -43,7 +43,8 @@ const employeeAPI = {
 }
 
 const wareHouseAPI = {
-  getAll: () => axi.get('/warehouse'),
+  getAll: () => axi.get(`/warehouse`),
+  search: (searchTerm) => axi.get(`/warehouse?searchTerm=${searchTerm}`),
   getById: (id) => axi.get(`/warehouse/${id}`)
 }
 
