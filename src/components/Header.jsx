@@ -1,19 +1,21 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
-import { Col, Dropdown, Row } from 'react-bootstrap'
+import { Col, Dropdown, Row, Form, FormControl, Button } from 'react-bootstrap'
 import { faLocationDot, faPhone, faMotorcycle } from '@fortawesome/free-solid-svg-icons';
 
 
 import logo from '../assets/images/Logo-2.png'
 import { useDispatch } from 'react-redux'
 import HeaderUserInfo from './HeaderInfo'
+import Search from './Search'
 import { removeToken } from '../redux/token/tokenSlice'
 
 import search from '../assets/images/icon/search.png';
 import cart from '../assets/images/icon/cart.png';
 import heart from '../assets/images/icon/heart.png';
+import { propTypes } from 'react-bootstrap/esm/Image';
 
 const mainNav = [
     {
@@ -30,7 +32,8 @@ const mainNav = [
     }
 ]
 
-const Header = () => {
+const Header = (props) => {
+    const [showSearchForm, setShowSearchForm] = useState(false);
     const cartLength = useSelector((state) => state.cartItems.value.length)
     const token = useSelector(state => state.token.value)
 
@@ -41,18 +44,16 @@ const Header = () => {
 
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        window.addEventListener("scroll", () => {
-            if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
-                headerRef.current.classList.add('shrink')
-            } else {
-                headerRef.current.classList.remove('shrink')
-            }
-        })
-        return () => {
-            window.removeEventListener("scroll")
-        };
-    }, []);
+    function handleSearchFormShow() {
+        console.log('aa')
+        setShowSearchForm(true)
+    };
+
+    function handleSearchFormClose() {
+        setShowSearchForm(false)
+    };
+
+    
 
     const onLogout = () => {
         dispatch(removeToken())
@@ -74,7 +75,9 @@ const Header = () => {
         </i>
     ));
 
+   
     return (
+        <>
         <div className="header" ref={headerRef}>
              <div className="header__top">
                 <div className="container">
@@ -115,14 +118,20 @@ const Header = () => {
                         }
                     </div>
                     <div className="header__menu__right">
+                    
                         <div className="header__menu__item header__menu__right__item">
-                            <img src={search} alt="" />
+                            <img src={search} className="search" onClick={handleSearchFormShow} />
                         </div>
                         <div className="header__menu__item header__menu__right__item">
                             <Dropdown className="buttomCart">
                                 <Dropdown.Toggle className="buttomOpiton"  id="dropdown-custom-components">
-                                <img src={cart} alt="" />
-                                <span className="cartLength">{cartLength}</span>
+                                <img src={cart}  />
+                                {
+                                    cartLength !== 0 ?
+                                    <span className="cartLength">{cartLength}</span>
+                                    :<></>
+                                }
+                                
                                 </Dropdown.Toggle>
                                <HeaderUserInfo token={token} onLogout={onLogout} />
                             </Dropdown>
@@ -131,6 +140,11 @@ const Header = () => {
                 </div>
             </div>
         </div>
+        <Search
+                isShow={showSearchForm}
+                onCloseSearchform={handleSearchFormClose}
+            />
+        </>
     )
 }
 

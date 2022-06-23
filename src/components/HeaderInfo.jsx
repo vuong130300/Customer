@@ -31,7 +31,7 @@ function HeaderUserInfo(props) {
     return (
         <Dropdown.Menu>
             {
-                token != undefined
+                token != null
                     ?
                     <>
                         <Dropdown.Item href="/user-info">Xem thông tin</Dropdown.Item>
