@@ -26,19 +26,24 @@ const ProductCard = props => {
                 <h3 className="product-card__name">{item.product.name}</h3>
                 <div className="product-card__price">
                     {numberWithCommas(item.soldPrice)}
-                    <span className="product-card__price__old">
+                    {/* <span className="product-card__price__old">
                         <del>{numberWithCommas(399000)}</del>
-                    </span>
+                    </span> */}
+                    
+                    {/* <span className="product-card__price__old">
+                        <del>{numberWithCommas(399000)}</del>
+                    </span> */}
                 </div>
             </Link>
             <div className="product-card__btn">
                 <Button
-                    size="sm"    
+                      
                     icon="bx bx-cart"
                     animate={true}
                     onClick={() => dispatch(set(item))}
+                    className="add"
                 >
-                    chọn mua
+                    +
                 </Button>
             </div>
         </div>
