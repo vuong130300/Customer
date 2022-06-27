@@ -67,6 +67,13 @@ const Cart = () => {
     return (
         <Helmet title="Giỏ hàng">
             <div className="cart">
+                <div className="cart__list">
+                    {
+                        cartItems.map((item) => (
+                            <CartItem item={item} key={item._id}/>
+                        ))
+                    }
+                </div>
                 <div className="cart__info">
                     <div className="cart__info__txt">
                         <p>
@@ -98,13 +105,6 @@ const Cart = () => {
                         </Link>
                         
                     </div>
-                </div>
-                <div className="cart__list">
-                    {
-                        cartItems.map((item) => (
-                            <CartItem item={item} key={item._id}/>
-                        ))
-                    }
                 </div>
             </div>
         </Helmet>

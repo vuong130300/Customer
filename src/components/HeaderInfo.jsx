@@ -14,9 +14,7 @@ HeaderUserInfo.propTypes = {
 };
 
 function HeaderUserInfo(props) {
-    const { onLogout } = props
-    const cartArray = useSelector((state) => state.cartItems.value)
-    const token = useSelector(state => state.token.value)
+    const { onLogout, cartItems, token } = props
 
     function handleLogout() {
         if (onLogout) {
@@ -27,7 +25,7 @@ function HeaderUserInfo(props) {
     return (
         <Dropdown.Menu>
             {
-                token !== null
+                token
                     ?
                     <>
                         <Dropdown.Item href="/user-info">Xem thông tin</Dropdown.Item>
@@ -40,7 +38,7 @@ function HeaderUserInfo(props) {
                     :
                     <>
                         <Dropdown.Item href="/cart">
-                            <img src={cart} alt="" /> Giỏ hàng {cartArray.length!==0? cartArray.length :<></>} 
+                            <img src={cart} alt="" /> Giỏ hàng {cartItems.length!==0? cartItems.length :<></>} 
                         </Dropdown.Item>
                         <Dropdown.Item href="/cart">
                             <img src={heart} alt="" /> Yêu thích

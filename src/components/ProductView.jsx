@@ -10,6 +10,7 @@ import { remove } from '../redux/product-modal/productModalSlice'
 
 import Button from './Button'
 import numberWithCommas from '../utils/numberWithCommas'
+import { Col } from 'react-bootstrap'
 
 const ProductView = props => {
 
@@ -118,24 +119,31 @@ const ProductView = props => {
                     </div>
                 </div> */}
                 <div className="product__info__item">
-                    <div className="product__info__item__title">
-                        Số lượng ({product.product.unit})
-                    </div>
                     <div className="product__info__item__quantity">
-                        <div className="product__info__item__quantity__btn" onClick={() => updateQuantity('minus')}>
-                            <i className="bx bx-minus"></i>
+                        <div className="product__info__item__title">
+                            Số lượng ({product.product.unit})
                         </div>
-                        <div className="product__info__item__quantity__input">
-                            {quantity}
-                        </div>
-                        <div className="product__info__item__quantity__btn" onClick={() => updateQuantity('plus')}>
-                            <i className="bx bx-plus"></i>
+                        <div className="product__info__item__quantity">
+                            <div className="product__info__item__quantity__btn" onClick={() => updateQuantity('minus')}>
+                                <i className="bx bx-minus"></i>
+                            </div>
+                            <div className="product__info__item__quantity__input">
+                                {quantity}
+                            </div>
+                            <div className="product__info__item__quantity__btn" onClick={() => updateQuantity('plus')}>
+                                <i className="bx bx-plus"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div className="product__info__item">
-                    <Button onClick={() => {addToCart()}}>thêm vào giỏ</Button>
-                    <Button onClick={() => {goToCart()}}>mua ngay</Button>
+                    <Col>
+                        <Button  onClick={() => {addToCart()}}>thêm vào giỏ</Button>
+                    </Col>
+                    <Col>
+                        {/* <Button onClick={() => {goToCart()}}>mua ngay</Button> */}
+                        <Button  onClick={() => {addToCart()}}>Yêu thích</Button>
+                    </Col>
                 </div>
             </div>
             <div className={`product-description mobile ${descriptionExpand ? 'expand' : ''}`}>

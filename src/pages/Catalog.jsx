@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import {brandAPI, categoryAPI, wareHouseAPI} from '../api/api';
 import Helmet from '../components/Helmet'
@@ -6,8 +6,11 @@ import CheckBox from '../components/CheckBox'
 
 import Button from '../components/Button'
 import InfinityList from '../components/InfinityList'
+import useQuery from '../hooks/useQuery';
+
 
 const Catalog = () => {
+    const searchTerm = useQuery().get('searchTerm')
 
     const initFilter = {
         categories: [],
@@ -23,6 +26,8 @@ const Catalog = () => {
     const [categories, setCategories] = useState([])
 
     const [brands, setBrands] = useState([])
+
+    
 
     useEffect(() => {
         async function getCategories() {
@@ -45,20 +50,20 @@ const Catalog = () => {
      useEffect(() => {
         async function getProducts() {
             try {
-                const response = await wareHouseAPI.getAll();
+                const response = await wareHouseAPI.search(searchTerm);
                 if(response.status === 200) {
-                    const products = response.data
-                    setProducts(products)
-                    setProductFilter(products)
+                    console.log(response.data)
+                    setProducts(response.data)
+                    setProductFilter(response.data)
                 } else {
                     console.log(response)
                 }
-            } catch (error) {
-                console.log(error)
-            }
+            } catch(err) {
+                console.log(err)
+            }           
         }
         getProducts()
-    },[])
+    },[searchTerm])
 
     useEffect(() => {
         async function getBrands() {
@@ -107,16 +112,18 @@ const Catalog = () => {
 
     useEffect(
         () => {
-            let temp = [...products]
+            try {
+                let temp = [...products]
 
-            if (filter.categories.length > 0) {
-                temp = temp.filter(e => filter.categories.includes(e.product.category))
-            }
-
-            if (filter.brands.length > 0) {
-                temp = temp.filter(e => filter.brands.includes(e.product.brand))
-            }
-            setProductFilter(temp)
+                if (filter.categories.length > 0) {
+                    temp = temp.filter(e => filter.categories.includes(e.product.category))
+                }
+    
+                if (filter.brands.length > 0) {
+                    temp = temp.filter(e => filter.brands.includes(e.product.brand))
+                }
+                setProductFilter(temp)
+            } catch(err) {} 
         },
         [filter]
     )

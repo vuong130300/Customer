@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
@@ -9,10 +9,14 @@ import { faLocationDot, faPhone, faMotorcycle } from '@fortawesome/free-solid-sv
 import logo from '../assets/images/Logo-2.png'
 import { useDispatch } from 'react-redux'
 import HeaderUserInfo from './HeaderInfo'
+import Search from './Search'
 import { removeToken } from '../redux/token/tokenSlice'
 
 import search from '../assets/images/icon/search.png';
 import cart from '../assets/images/icon/cart.png';
+import heart from '../assets/images/icon/heart.png';
+import { propTypes } from 'react-bootstrap/esm/Image';
+import { wareHouseAPI } from '../api/api';
 
 const mainNav = [
     {
@@ -29,13 +33,36 @@ const mainNav = [
     }
 ]
 
-const Header = () => {
-    const cartLength = useSelector((state) => state.cartItems.value.length)
-    const { pathname } = useLocation()
-    const activeNav = mainNav.findIndex(e => e.path === pathname)
+const Header = (props) => {
+    const [showSearchForm, setShowSearchForm] = useState(false);
+    const cartItems = useSelector((state) => state.cartItems.value)
+    const token = useSelector((state) => state.token.value)
     const headerRef = useRef(null)
     const dispatch = useDispatch()
     const history = useHistory()
+    const { pathname } = useLocation()
+
+    const activeNav = mainNav.findIndex(e => e.path === pathname)
+
+
+    function handleSearchFormShow() {
+        setShowSearchForm(!showSearchForm)
+    };
+
+    async function handleSearch(searchTerm) {
+        try {
+            const response = await wareHouseAPI.search(searchTerm);
+            if(response.status === 200) {
+                const searchedProducts = response.data
+                setShowSearchForm(!showSearchForm)
+                history.push(`/catalog?searchTerm=${searchTerm}`)
+            } else {
+                console.log(response)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    };
 
     function handleLogout (){
         dispatch(removeToken())
@@ -73,7 +100,9 @@ const Header = () => {
         </i>
     ));
 
+   
     return (
+        <>
         <div className="header" ref={headerRef}>
              <div className="header__top">
                 <div className="container">
@@ -114,26 +143,34 @@ const Header = () => {
                         }
                     </div>
                     <div className="header__menu__right">
+                    
                         <div className="header__menu__item header__menu__right__item">
-                            <img src={search} alt="" />
+                            <img src={search} className="search" onClick={handleSearchFormShow} />
                         </div>
                         <div className="header__menu__item header__menu__right__item">
                             <Dropdown className="buttomCart">
                                 <Dropdown.Toggle className="buttomOpiton"  id="dropdown-custom-components">
-                                <img src={cart} alt="" />
+                                <img src={cart}  />
                                 {
-                                    cartLength !== 0 ?
-                                    <span className="cartLength">{cartLength}</span>
-                                    : <></>
+                                    cartItems.length !== 0 ?
+                                    <span className="cartLength">{cartItems.length}</span>
+                                    :<></>
                                 }
+                                
                                 </Dropdown.Toggle>
-                               <HeaderUserInfo  onLogout={handleLogout} />
+                               <HeaderUserInfo  cartItems={cartItems} token={token} onLogout={handleLogout} />
                             </Dropdown>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <Search
+            showSearchForm={showSearchForm}
+            onSearchFormShow={handleSearchFormShow}
+            onSearch={handleSearch}
+        />
+        </>
     )
 }
 
